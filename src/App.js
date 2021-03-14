@@ -1,7 +1,10 @@
 import React from 'react';
 import './App.css';
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+import { TilesRenderer } from '3d-tiles-renderer';
 
 class App extends React.Component {
   constructor(props) {
@@ -29,10 +32,29 @@ class App extends React.Component {
     const gridHelper = new THREE.GridHelper(size, divisions);
     this.scene.add(gridHelper);
 
+    this.tilesRenderer = new TilesRenderer(
+      'https://skand-upload-data.s3-ap-southeast-2.amazonaws.com/Skand+St+Kilda+HQ/Production_2.json'
+    );
+    this.tilesRenderer.setCamera(this.camera);
+    this.tilesRenderer.setResolutionFromRenderer(this.camera, this.renderer);
+    this.scene.add(this.tilesRenderer.group);
+
+    this.tilesRenderer.onLoadTileSet = (t) => {
+      const loc = new THREE.Vector3(
+        t.root.boundingVolume.sphere[0],
+        t.root.boundingVolume.sphere[1],
+        t.root.boundingVolume.sphere[2]
+      );
+      this.camera.position.set(loc.x, loc.y, loc.z);
+      this.needsRerender = true;
+    };
+    // this.tilesRenderer.onLoadModel = () => (this.needsRerender = true);
+    this.needsRerender = true;
     // Move position camera back to allow for orbit controls
     this.camera.position.z = 5;
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
+    this.loaded = 0;
     this.animate();
   }
 
@@ -45,7 +67,13 @@ class App extends React.Component {
 
   animate() {
     requestAnimationFrame(this.animate);
+
+    this.camera.updateMatrixWorld();
     this.controls.update();
+    if (this.needsRerender) {
+      this.needsRerender = false;
+      this.tilesRenderer.update();
+    }
 
     this.renderer.render(this.scene, this.camera);
   }

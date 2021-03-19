@@ -1,0 +1,80 @@
+{
+  "asset": { "generator": "3D Builder", "version": "2.0" },
+  "scene": 0,
+  "scenes": [{ "nodes": [0] }],
+  "nodes": [
+    {
+      "mesh": 0,
+      "matrix": [
+        0.29298561811447144,
+        0,
+        0,
+        0,
+        0,
+        -3.4926607384022645e-8,
+        -0.29298558831214905,
+        0,
+        0,
+        0.29298558831214905,
+        -3.4926607384022645e-8,
+        0,
+        -1.268627405166626,
+        1.4070004681343562e-6,
+        -0.94209617376327515,
+        1
+      ]
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": { "POSITION": 0 },
+          "mode": 4,
+          "indices": 1,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "lambert2SG.001",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [1, 1, 1, 1],
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.5
+      },
+      "alphaMode": "OPAQUE"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "count": 12,
+      "componentType": 5126,
+      "type": "VEC3",
+      "min": [-18, -28.999996185302734, -5.1856036407116335e-6],
+      "max": [26.659999847412109, 22.568996429443359, 10.000001907348633]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "count": 60,
+      "componentType": 5125,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 144,
+      "byteStride": 12,
+      "target": 34962
+    },
+    { "buffer": 0, "byteOffset": 144, "byteLength": 240, "target": 34963 }
+  ],
+  "buffers": [{ "byteLength": 384, "uri": "model.bin" }]
+}

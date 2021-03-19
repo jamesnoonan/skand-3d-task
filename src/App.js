@@ -3,8 +3,10 @@ import './App.css';
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from './GLTFLoader';
 
-import { TilesRenderer } from '3d-tiles-renderer';
+import { TilesRenderer } from './tilesRendererJS/index';
 
 class App extends React.Component {
   constructor(props) {
@@ -25,36 +27,51 @@ class App extends React.Component {
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth - 1, window.innerHeight);
     this.mount.appendChild(this.renderer.domElement);
+    this.loader = new GLTFLoader();
+
+    this.loader.load(
+      './gltfOne/Box.gltf',
+      (gltf) => {
+        // ADD MODEL TO THE SCENE
+        // gltf.scene.children[0].scale.set(new THREE.Vector3(1, 1, 1));
+        this.scene.add(gltf.scene);
+        this.scene.background = new THREE.Color(0xff5555);
+        this.renderer.render(this.scene, this.camera);
+      },
+      undefined,
+
+      (error) => {
+        console.log(error);
+      }
+    );
 
     // Create a 10x10 grid
-    const size = 10;
+    const size = 5;
     const divisions = 10;
     const gridHelper = new THREE.GridHelper(size, divisions);
     this.scene.add(gridHelper);
 
-    this.tilesRenderer = new TilesRenderer(
-      'https://skand-upload-data.s3-ap-southeast-2.amazonaws.com/Skand+St+Kilda+HQ/Production_2.json'
-    );
-    this.tilesRenderer.setCamera(this.camera);
-    this.tilesRenderer.setResolutionFromRenderer(this.camera, this.renderer);
-    this.scene.add(this.tilesRenderer.group);
+    // this.tilesRenderer = new TilesRenderer(
+    //   'https://skand-upload-data.s3-ap-southeast-2.amazonaws.com/Skand+St+Kilda+HQ/Production_2.json'
+    // );
+    // this.tilesRenderer.setCamera(this.camera);
+    // this.tilesRenderer.setResolutionFromRenderer(this.camera, this.renderer);
+    // this.scene.add(this.tilesRenderer.group);
 
-    this.tilesRenderer.onLoadTileSet = (t) => {
-      const loc = new THREE.Vector3(
-        t.root.boundingVolume.sphere[0],
-        t.root.boundingVolume.sphere[1],
-        t.root.boundingVolume.sphere[2]
-      );
-      this.camera.position.set(loc.x, loc.y, loc.z);
-      this.needsRerender = true;
-    };
+    // this.tilesRenderer.onLoadTileSet = (t) => {
+    //   const loc = new THREE.Vector3(
+    //     t.root.boundingVolume.sphere[0],
+    //     t.root.boundingVolume.sphere[1],
+    //     t.root.boundingVolume.sphere[2]
+    //   );
+    //   this.camera.position.set(loc.x, loc.y, loc.z);
+    //   this.needsRerender = true;
+    // };
     // this.tilesRenderer.onLoadModel = () => (this.needsRerender = true);
-    this.needsRerender = true;
+    // this.needsRerender = true;
     // Move position camera back to allow for orbit controls
     this.camera.position.z = 5;
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
-    this.loaded = 0;
     this.animate();
   }
 
@@ -70,10 +87,10 @@ class App extends React.Component {
 
     this.camera.updateMatrixWorld();
     this.controls.update();
-    if (this.needsRerender) {
-      this.needsRerender = false;
-      this.tilesRenderer.update();
-    }
+    // if (this.needsRerender) {
+    //   this.needsRerender = false;
+    //   this.tilesRenderer.update();
+    // }
 
     this.renderer.render(this.scene, this.camera);
   }
